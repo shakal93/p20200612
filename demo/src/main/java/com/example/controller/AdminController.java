@@ -17,7 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.example.dao.ItemDAO;
+import com.example.dao.MemberDAO;
 import com.example.vo.ItemVO;
+import com.example.vo.MemberVO;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -25,10 +27,25 @@ public class AdminController {
 	
 	@Autowired
 	private ItemDAO iDAO = null;
+	@Autowired
+	private MemberDAO mDAO = null;
 	
 	@RequestMapping(value = "/home")
 	public String home() {
 		return "/admin/home";
+	}
+	
+	@RequestMapping(value = "/member", method = RequestMethod.GET)
+	public String membermanage(Model model) {
+		List<MemberVO> list = mDAO.selectMemberLIst();
+		model.addAttribute("list", list);
+		return "/admin/member";
+	}
+	
+	@RequestMapping(value = "/member", method = RequestMethod.POST)
+	public String membermanagepost(@RequestParam(value="chk[]", required = false) String[] id) {
+		mDAO.deleteMemberBatch(id);
+		return "redirect:/admin/member";
 	}
 	
 	@RequestMapping(value = "/item", method = RequestMethod.GET)

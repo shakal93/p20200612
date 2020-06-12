@@ -34,4 +34,12 @@
 		SELECT * FROM MEMBER
 	</select>
 	
+	<delete id="delmemberBatch" parameterType="string">
+		DELETE FROM MEMBER WHERE USERID IN(
+		<foreach collection="array" item="tmp" separator=",">
+			#{tmp}
+		</foreach>
+		)
+	</delete>
+	
 </mapper>

@@ -29,7 +29,7 @@ public class MemberController {
 //			System.out.println(tmp);
 //		}
 		
-		model.addAttribute("name","가나다");
+//		model.addAttribute("name","가나다");
 		model.addAttribute("list", list); //hashmap<key, value> C -> V로 값전달
 		return "memberlist";
 	}
