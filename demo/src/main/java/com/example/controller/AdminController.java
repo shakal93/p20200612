@@ -35,6 +35,11 @@ public class AdminController {
 		return "/admin/home";
 	}
 	
+	@RequestMapping(value = "/itemorder")
+	public String itemorder() {
+		return "admin/itemorder";
+	}
+	
 	@RequestMapping(value = "/member", method = RequestMethod.GET)
 	public String membermanage(Model model) {
 		List<MemberVO> list = mDAO.selectMemberLIst();
@@ -77,6 +82,12 @@ public class AdminController {
 			return "redirect:/admin/itemupdate";
 		}
 //		System.out.println(btn);
+		return "redirect:/admin/item";
+	}
+	
+	@RequestMapping(value="/itemdeleteone")
+	public String itemdeleteone(@RequestParam(value = "no", defaultValue = "0") int no) {
+		iDAO.deleteItemOne(no);
 		return "redirect:/admin/item";
 	}
 	

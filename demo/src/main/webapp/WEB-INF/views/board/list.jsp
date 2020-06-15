@@ -39,11 +39,11 @@
 		</table>
 		<nav aria-label="Page navigation example">
 			<ul class="pagination">
-				<li class="page-item"><a class="page-link" href="#">Previous</a></li>
+				<li class="page-item"><a class="page-link" href="/board/list?page=${page-1}">Previous</a></li>
 				<c:forEach var="i" begin="1" end="${cnt}" step="1">
 					<li class="page-item"><a class="page-link" href="/board/list?page=${i}">${i}</a></li>
 				</c:forEach>
-				<li class="page-item"><a class="page-link" href="#">Next</a></li>
+				<li class="page-item"><a class="page-link" href="/board/list?page=${page+1}">Next</a></li>
 			</ul>
 		</nav>
 	</div>

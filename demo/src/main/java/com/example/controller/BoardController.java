@@ -101,14 +101,18 @@ public class BoardController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String list(Model model, HttpSession httpSession,
 			@RequestParam(value="page", defaultValue = "1", required = false) int page) {
+		int cnt = bDAO.countBoard();
+		if (page < 1) {
+			return "redirect:/board/list";
+		} else if (page > (cnt-1)/10 + 1) {
+			return "redirect:/board/list?page=" + (page-1);
+		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("start", page*10-9);
 		map.put("end", page*10);
 		List<BoardVO> list = bDAO.selectBoard(map);
 		
-		int cnt = bDAO.countBoard();
-		
+		model.addAttribute("page", page);
 		model.addAttribute("list", list);
 		model.addAttribute("cnt", (cnt-1)/10 + 1);
 		

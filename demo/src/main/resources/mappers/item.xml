@@ -50,6 +50,10 @@
 		)
 	</delete>
 	
+	<delete id="deleteItemOne" parameterType="int">
+		DELETE FROM ITEM WHERE ITEMNO = #{no}
+	</delete>
+	
 	<update id="updateItemBatch" parameterType="java.util.List">
 		UPDATE ITEM SET
 	    itemname=(
