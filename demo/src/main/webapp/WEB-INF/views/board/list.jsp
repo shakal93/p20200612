@@ -13,7 +13,14 @@
 <body>
 	<div class="container">
 		<h4>글목록</h4>
-		<table class="table">
+		<div class="form-inline" >
+			<a href="/board/insert" class="btn btn-success">글쓰기</a>
+			<form action="" method="post">
+				<input type="text" class="form-control" placeholder="검색어"/>
+				<input type="submit" class="btn btn-success" value="검색"/>
+			</form>
+		</div>
+		<table class="table table-sm">
 			<thead>
 				<tr>
 					<th>번호</th>

@@ -1,12 +1,15 @@
 package com.example.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.dao.BoardDAO;
+import com.example.mapper.BoardMapper;
 import com.example.vo.BoardVO;
 
 @Controller
@@ -30,8 +34,51 @@ public class BoardController {
 	@Autowired
 	private BoardDAO bDAO = null;
 	
+	@Autowired
+	private BoardMapper boardMapper = null;
+	
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
+	public String update(HttpServletRequest request, Model model,
+			@RequestParam(value = "no", defaultValue = "0") int no) {
+		BoardVO vo = bDAO.selectBoardOne(no);
+		model.addAttribute("vo", vo);
+		return "/board/update";
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public String update(HttpServletRequest request,
+			@ModelAttribute BoardVO obj,
+			@RequestParam MultipartFile[] img) throws IOException {
+		if (img != null) {
+			for (MultipartFile one : img) {
+//				if (!one.getOriginalFilename().equals("")) { //파일명이 비어 있지 않다면
+				if(one.getSize() > 0) { //첨부한 파일의 용량이 있는냐?
+					obj.setBrd_img(one.getBytes());
+				}
+			}
+		}
+		bDAO.updateBoard(obj);
+		return "redirect:" + request.getContextPath() + "/board/content?no=";
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public String delete(HttpServletRequest request,
+			@RequestParam(value = "no", defaultValue = "0") int no) {
+		BoardVO obj = new BoardVO();
+		obj.setBrd_no(no);
+		//int ret = bDAO.deleteBoard(obj);
+		int ret = boardMapper.deleteBoard(obj);
+		if(ret>0) { //성공하면 목록화면
+			return "redirect:" + request.getContextPath() + "/board/list";
+		}
+		//실패하면 이전화면
+		return "redirect:" + request.getContextPath() + "/board/content?no="+ no;
+	}
+	
 	@RequestMapping(value = "/getimg")
-	public ResponseEntity<byte[]> getimg(@RequestParam("no") int no){
+	public ResponseEntity<byte[]> getimg(
+			@RequestParam("no") int no,
+			HttpServletRequest request){
 		BoardVO obj = bDAO.selectBoardImg(no);
 		try {
 			if (obj.getBrd_img().length > 0) {
@@ -44,8 +91,17 @@ public class BoardController {
 			return null;
 		}
 		catch (Exception e) {
-			
-			return null;
+			InputStream in
+				= request.getServletContext().getResourceAsStream("/resources/img/default.jpg");
+			HttpHeaders header = new HttpHeaders();
+			header.setContentType(MediaType.IMAGE_JPEG);
+			ResponseEntity<byte[]> ret;
+			try {
+				ret = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), header, HttpStatus.OK);
+				return ret;
+			} catch(Exception e1) {
+				return null;
+			}
 		}
 	}
 	
@@ -95,6 +151,12 @@ public class BoardController {
 		
 		BoardVO obj = bDAO.selectBoardOne(no);
 		model.addAttribute("obj", obj);
+		
+		int p = bDAO.selectBoardPrev(no);
+		model.addAttribute("prev", p);
+		
+		int n = bDAO.selectBoardNext(no);
+		model.addAttribute("next", n);
 		return "/board/content";
 	}
 	

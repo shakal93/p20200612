@@ -15,6 +15,7 @@ public interface BoardDAO {
 	public int countBoard(); //전체 개수 구하기
 	
 	public int updateHit(int no);
-	
+	public int selectBoardPrev(int no);
+	public int selectBoardNext(int no);
 	public BoardVO selectBoardImg(int no);
 }

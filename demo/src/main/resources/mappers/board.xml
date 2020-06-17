@@ -13,6 +13,16 @@
 		#{brd_img, jdbcType=BLOB}, #{brd_id}, #{brd_hit}, SYSDATE)
 	</insert>
 	
+	<select id="selectBoardPrev" parameterType="int" resultType="int">
+		SELECT NVL(MAX(BRD_NO),0) FROM BOARD 
+		WHERE BRD_NO <![CDATA[ < ]]> #{brd_no}
+	</select>
+	
+	<select id="selectBoardNext" parameterType="int" resultType="int">
+		SELECT NVL(MIN(BRD_NO),0) FROM BOARD 
+		WHERE BRD_NO <![CDATA[ > ]]> #{brd_no}
+	</select>
+	
 	<select id="insertBoardBatch" parameterType="java.util.List">
 		INSERT ALL
 			<foreach collection="list" item="obj" separator=" ">
@@ -56,4 +66,19 @@
 		WHERE BRD_NO = #{brd_no}
 	</select>
 	
+	<delete id="deleteBoard" parameterType="com.example.vo.BoardVO">
+		DELETE FROM BOARD WHERE BRD_NO = #{brd_no}
+	</delete>
+	
+	<update id="updateBoardOne" parameterType="com.example.vo.BoardVO">
+		UPDATE 
+			BOARD 
+		SET 
+			BRD_TITLE=#{brd_title}, BRD_CONTENT=#{brd_content}
+			<if test="brd_img != null ">
+				,BRD_IMG=#{brd_img, jdbcType=BLOB}
+			</if> 
+		WHERE
+			BRD_NO = #{brd_no}	
+	</update>
 </mapper>
