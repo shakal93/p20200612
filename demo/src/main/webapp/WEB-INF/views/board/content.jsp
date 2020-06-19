@@ -1,20 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>게시판내용</title>
-	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.css"
-	rel="stylesheet"/>
+	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.css" rel="stylesheet"/>
 </head>
 
 <body>
 	<div class="container">
+		<%@ include file="/WEB-INF/views/menu.jsp" %><br />
 		글번호 : ${obj.brd_no}<br />
 		글제목 : ${obj.brd_title}<br />
-		글내용 : ${obj.brd_content}<br />
+		글내용 : ${fn:replace(obj.brd_content, newLineChar, "<br />")}<br />
 		작성자 : ${obj.brd_id}<br />
 		조회수 : ${obj.brd_hit}<br />
 		작성일자 : ${obj.brd_date}<br />

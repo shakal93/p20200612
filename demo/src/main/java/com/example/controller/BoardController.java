@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -161,24 +162,30 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(Model model, HttpSession httpSession,
-			@RequestParam(value="page", defaultValue = "1", required = false) int page) {
-		int cnt = bDAO.countBoard();
-		if (page < 1) {
-			return "redirect:/board/list";
-		} else if (page > (cnt-1)/10 + 1) {
-			return "redirect:/board/list?page=" + (page-1);
-		}
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("start", page*10-9);
-		map.put("end", page*10);
-		List<BoardVO> list = bDAO.selectBoard(map);
+	public String list(Model model, HttpSession httpSession, 
+			HttpServletRequest request,
+			@RequestParam(value="page", defaultValue = "0", required = false) int page,
+			@RequestParam(value="text", defaultValue = "", required = false) String text) {
 		
-		model.addAttribute("page", page);
-		model.addAttribute("list", list);
-		model.addAttribute("cnt", (cnt-1)/10 + 1);
+		if(page == 0) {
+			return "redirect:" + request.getContextPath() + "/board/list?page=1"; 
+		}
 		
 		httpSession.setAttribute("SESSION_BOARD_HIT_CHECK", 1);
+
+		// 목록
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("start", page*10-9); 	//시작위치
+		map.put("end", page*10);		//종료위치	
+		map.put("text", text);			//검색어
+		List<BoardVO> list = bDAO.selectBoard(map);
+		model.addAttribute("list", list);
+		
+		// 게시물 개수
+		int cnt = bDAO.countBoard(text); //검색어를 넘겨줌.
+		//System.out.println( (int) Math.ceil(n/10.0) );
+		model.addAttribute("cnt", (cnt-1)/10+1);
+		
 		return "/board/list";
 	}
 	

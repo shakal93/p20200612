@@ -5,7 +5,7 @@ public class MemberVO {
 	private String password = null;
 	private String username = null;
 	private String phone = null;
-	private int userage = 0;
+	private int birth = 0;
 	private String joindate = null;
 	
 	public String getUserid() {
@@ -32,11 +32,11 @@ public class MemberVO {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public int getUserage() {
-		return userage;
+	public int getBirth() {
+		return birth;
 	}
-	public void setUserage(int userage) {
-		this.userage = userage;
+	public void setBirth(int birth) {
+		this.birth = birth;
 	}
 	public String getJoindate() {
 		return joindate;
@@ -48,7 +48,7 @@ public class MemberVO {
 	@Override
 	public String toString() {
 		return "MemberVO [userid=" + userid + ", password=" + password + ", username=" + username + ", phone=" + phone
-				+ ", userage=" + userage + ", joindate=" + joindate + "]";
+				+ ", birth=" + birth + ", joindate=" + joindate + "]";
 	}
 
 }

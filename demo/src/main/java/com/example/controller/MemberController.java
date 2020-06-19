@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,18 @@ public class MemberController {
 		return "login";
 	}
 	
-	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String loginpost(@ModelAttribute MemberVO obj,
-			HttpSession httpSession) {
-		//DAO로 전달
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String loginpost(@ModelAttribute MemberVO obj, 
+			HttpSession httpSession, HttpServletRequest request) {
 		MemberVO obj1 = mDAO.selectMemberLogin(obj);
-		if (obj1 != null) {//로그인 성공시
+		if (obj1 != null) { //로그인 성공
 			httpSession.setAttribute("SESSION_ID", obj.getUserid());
-			return "redirect:/";
+			String backURL = (String) httpSession.getAttribute("CURRPAGE");
+			return "redirect:" + backURL;	
 		}
 		
-		return "redirect:/member/login"; //로그인 실패시 /member/login GET방식으로 전송
+		//로그인 실패 /member/login GET방식으로 전송
+		return "redirect:" + request.getContextPath()  + "/member/login";
 	}
 		
 	@RequestMapping(value="/join", method=RequestMethod.GET)

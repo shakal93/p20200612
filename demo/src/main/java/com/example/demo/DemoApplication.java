@@ -1,4 +1,5 @@
 package com.example.demo;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,15 +18,22 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 
-@EntityScan(basePackages = {"com.example.entity"}) //entity위치
-@EnableJpaRepositories(basePackages = {"com.example.repository"}) //repository 위치
-@ComponentScan({ "com.example.controller",
-	"com.example.rest_controller",
+//JPA
+@EntityScan(basePackages = { "com.example.entity" }) // entity위치
+@EnableJpaRepositories(basePackages = { "com.example.repository" }) // repository위치
+
+@ComponentScan({ 
+	"com.example.interceptor",
+	"com.example.controller", 
+	"com.example.rest_controller", 
 	"com.example.dao" })
+
 @MapperScan({"com.example.mapper"})
 public class DemoApplication extends SpringBootServletInitializer {
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
+		System.out.println("server start");
 	}
 
 	@Bean
@@ -36,6 +44,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 		sqlSessionFactoryBean.setMapperLocations(arrResource);
 		return sqlSessionFactoryBean.getObject();
 	}
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(DemoApplication.class);
