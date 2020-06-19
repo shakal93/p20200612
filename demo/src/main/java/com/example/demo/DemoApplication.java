@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 	"com.example.interceptor",
 	"com.example.controller", 
 	"com.example.rest_controller", 
+	"com.example.security",
 	"com.example.dao" })
 
 @MapperScan({"com.example.mapper"})
